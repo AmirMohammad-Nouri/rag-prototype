@@ -1,0 +1,358 @@
+RAG prototype — ask a question (type 'exit' to quit)
+
+> what deep nonlinear classifiers do ?
+Failed to send telemetry event ClientStartEvent: capture() takes 1 positional argument but 3 were given
+Failed to send telemetry event ClientCreateCollectionEvent: capture() takes 1 positional argument but 3 were given
+Failed to send telemetry event CollectionQueryEvent: capture() takes 1 positional argument but 3 were given
+Context:
+
+[Source 1: Gaussian Error Linear Units (GELUs) (1606.08415v5).pdf, page 8]
+Tim Salimans and Diederik P. Kingma. Weight normalization: A simple reparameterization to
+acceleratetrainingofdeepneuralnetworks. InNeuralInformationProcessingSystems,2016.
+Andrew M. Saxe, James L. McClelland, and Surya Ganguli. Exact solutions to the nonlinear dy-
+namics of learning in deep linear neural networks. In International Conference on Learning
+Representations,2014.
+Anish Shah, Sameer Shinde, Eashan Kadam, Hena Shah, and Sandip Shingade. Deep residual
+networkswithexponentiallinearunit. InVisionNet,2016.
+NitishSrivastava. Improvingneuralnetworkswithdropout. InUniversityofToronto,2013.
+NitishSrivastava,GeoffreyE.Hinton,AlexKrizhevsky,IlyaSutskever,andRuslanSalakhutdinov.
+Dropout: A simple way to prevent neural networks from overfitting. In Journal of Machine
+LearningResearch,2014.
+SergeyZagoruykoandNikosKomodakis. Wideresidualnetworks. BritishMachineVisionConfer-
+ence,2016.
+8
+
+---
+
+[Source 2: Gaussian Error Linear Units (GELUs) (1606.08415v5).pdf, page 7]
+REFERENCES
+JimmyBaandBrendanFrey. Adaptivedropoutfortrainingdeepneuralnetworks. InNeuralInfor-
+mationProcessingSystems,2013.
+Philip Bachman, Ouais Alsharif, and Doina Precup. Learning with pseudo-ensembles. In Neural
+InformationProcessingSystems,2014.
+AmitChoudhury. Asimpleapproximationtotheareaunderstandardnormalcurve. InMathematics
+andStatistics,2014.
+Djork-Arne´ Clevert, Thomas Unterthiner, and Sepp Hochreiter. Fast and accurate deep network
+learningbyexponentiallinearunits(ELUs). InInternationalConferenceonLearningRepresen-
+tations,2016.
+GuillaumeDesjardins,KarenSimonyan,RazvanPascanu,andKorayKavukcuoglu. Naturalneural
+networks. InarXiv,2015.
+KevinGimpel,NathanSchneider,BrendanO′Connor,DipanjanDas,DanielMills,JacobEisenstein,
+MichaelHeilman,DaniYogatama,JeffreyFlanigan,andNoahA.Smith. Part-of-SpeechTagging
+forTwitter: Annotation,Features, andExperiments. AssociationforComputationalLinguistics
+(ACL),2011.
+Dan Hendrycks and Kevin Gimpel. Adjusting for dropout variance in batch normalization and
+weightinitialization. InarXiv,2016.
+JohnHopfield. Neuralnetworksandphysicalsystemswithemergentcollectivecomputationalabil-
+ities. InProceedingsoftheNationalAcademyofSciencesoftheUSA,1982.
+Diederik Kingma and Jimmy Ba. Adam: A Method for Stochastic Optimization. International
+ConferenceforLearningRepresentations,2015.
+AlexKrizhevsky. LearningMultipleLayersofFeaturesfromTinyImages,2009.
+DavidKrueger,TeganMaharaj,Ja´nosKrama´r,MohammadPezeshki,NicolasBallas,NanRosemary
+Ke1,AnirudhGoyal,YoshuaBengio,HugoLarochelle,AaronCourville,andChrisPal.Zoneout:
+RegularizingRNNsbyrandomlypreservinghiddenactivations.InNeuralInformationProcessing
+Systems,2016.
+IlyaLoshchilovandFrankHutter. SGDR:Stochasticgradientdescentwithrestarts. arXiv,2016.
+Andrew L. Maas, Awni Y. Hannun, , and Andrew Y. Ng. Rectifier nonlinearities improve neural
+networkacousticmodels. InInternationalConferenceonMachineLearning,2013.
+WarrenS.McCullochandWalterPitts. Alogicalcalculusoftheideasimmanentinnervousactivity.
+InBulletinofMathematicalBiophysics,1943.
+DmytroMishkinandJiriMatas.Allyouneedisagoodinit.InInternationalConferenceonLearning
+Representations,2016.
+AbdelrahmanMohamed, GeorgeE.Dahl, andGeoffreyE.Hinton. Acousticmodelingusingdeep
+beliefnetworks. InIEEETransactionsonAudio,Speech,andLanguageProcessing,2012.
+VinodNairandGeoffreyE.Hinton. Rectifiedlinearunitsimproverestrictedboltzmannmachines.
+InInternationalConferenceonMachineLearning,2010.
+OlutobiOwoputi, BrendanO’Connor, ChrisDyer, KevinGimpel, NathanSchneider, andNoahA.
+Smith. Improved part-of-speech tagging for online conversational text with word clusters. In
+NorthAmericanChapteroftheAssociationforComputationalLinguistics(NAACL),2013.
+7
+
+---
+
+[Source 3: Gaussian Error Linear Units (GELUs) (1606.08415v5).pdf, page 3]
+3.2 MNISTAUTOENCODER
+We now consider a self-supervised setting and train a deep autoencoder on MNIST (Desjardins
+et al., 2015). To accomplish this, we use a network with layers of width 1000, 500, 250, 30, 250,
+500, 1000, in that order. We again use the Adam optimizer and a batch size of 64. Our loss is
+the mean squared loss. We vary the learning rate from 10−3 to 10−4. We also tried a learning
+rateof0.01butELUsdiverged,andGELUsandRELUsconvergedpoorly. TheresultsinFigure4
+indicate the GELU accommodates different learning rates and significantly outperforms the other
+nonlinearities.
+3
+
+---
+
+[Source 4: Gaussian Error Linear Units (GELUs) (1606.08415v5).pdf, page 1]
+1 INTRODUCTION
+Earlyartificialneuronsutilizedbinarythresholdunits(Hopfield,1982;McCulloch&Pitts,1943).
+Thesehardbinarydecisionsaresmoothedwithsigmoidactivations,enablinganeurontohavea“fir-
+ingrate”interpretationandtotrainwithbackpropagation. Butasnetworksbecamedeeper,training
+withsigmoidactivationsprovedlesseffectivethanthenon-smooth,less-probabilisticReLU(Nair&
+Hinton,2010)whichmakeshardgatingdecisionsbaseduponaninput’ssign.Despitehavinglessof
+astatisticalmotivation, theReLUremainsacompetitiveengineeringsolutionwhichoftenenables
+fasterandbetterconvergencethansigmoids. BuildingonthesuccessesofReLUs,arecentmodifi-
+cationcalledELUs(Clevertetal.,2016)allowsaReLU-likenonlinearitytooutputnegativevalues
+which sometimes increases training speed. In all, the activation choice has remained a necessary
+architecturedecisionforneuralnetworkslestthenetworkbeadeeplinearclassifier.
+Deepnonlinearclassifierscanfittheirdatasowellthatnetworkdesignersareoftenfacedwiththe
+choiceofincludingstochasticregularizerlikeaddingnoisetohiddenlayersorapplyingdropout(Sri-
+vastavaetal.,2014),andthischoiceremainsseparatefromtheactivationfunction. Somestochastic
+regularizerscanmakethenetworkbehavelikeanensembleofnetworks,apseudoensemble(Bach-
+manetal.,2014),andcanleadtomarkedaccuracyincreases. Forexample,thestochasticregular-
+izerdropoutcreatesapseudoensemblebyrandomlyalteringsomeactivationdecisionsthroughzero
+multiplication. Nonlinearities and dropout thus determine a neuron’s output together, yet the two
+innovations have remained distinct. More, neither subsumed the other because popular stochastic
+regularizersactirrespectivelyoftheinputandnonlinearitiesareaidedbysuchregularizers.
+In this work, we introduce a new nonlinearity, the Gaussian Error Linear Unit (GELU). It relates
+tostochasticregularizersinthatitistheexpectationofamodificationtoAdaptiveDropout(Ba&
+Frey,2013). Thissuggestsamoreprobabilisticviewofaneuron’soutput. Wefindthatthisnovel
+nonlinearity matches or exceeds models with ReLUs or ELUs across tasks from computer vision,
+naturallanguageprocessing,andautomaticspeechrecognition.
+
+---
+
+[Source 5: Gaussian Error Linear Units (GELUs) (1606.08415v5).pdf, page 2]
+3.1 MNISTCLASSIFICATION
+Let us verify that this nonlinearity competes with previous activation functions by replicating an
+experimentfromClevertetal.(2016). Tothisend,wetrainafullyconnectedneuralnetworkwith
+GELUs (µ = 0,σ = 1), ReLUs, and ELUs (α = 1). Each 8-layer, 128 neuron wide neural
+network is trained for 50 epochs with a batch size of 128. This experiment differs from those of
+2
+
+---
+
+Question: what deep nonlinear classifiers do ?
+
+According to the provided context, deep nonlinear classifiers can fit their data very well (Source 4, page 1). This capability often leads network designers to include stochastic regularizers like adding noise to hidden layers or applying dropout to prevent overfitting (Source 4, page 1). The activation function choice is a necessary architecture decision for neural networks to ensure they function as deep nonlinear classifiers rather than deep linear classifiers (Source 4, page 1). Additionally, with proper regularization, deep nonlinear classifiers can behave like ensembles of networks (pseudoensembles), which can lead to marked accuracy increases (Source 4, page 1).
+
+Sources:
+  - Gaussian Error Linear Units (GELUs) (1606.08415v5).pdf (page/section 8, dept: software)
+  - Gaussian Error Linear Units (GELUs) (1606.08415v5).pdf (page/section 7, dept: software)
+  - Gaussian Error Linear Units (GELUs) (1606.08415v5).pdf (page/section 3, dept: software)
+  - Gaussian Error Linear Units (GELUs) (1606.08415v5).pdf (page/section 1, dept: software)
+  - Gaussian Error Linear Units (GELUs) (1606.08415v5).pdf (page/section 2, dept: software)
+
+[tokens: 2761]
+
+> what is Maximum Mean Discrepancy (MMD)?
+Failed to send telemetry event ClientStartEvent: capture() takes 1 positional argument but 3 were given
+Failed to send telemetry event ClientCreateCollectionEvent: capture() takes 1 positional argument but 3 were given
+Context:
+
+[Source 1: A Universal Approximation Theorem of Deep Neural-Networks for Expressing Probability Distributions.pdf, page 6]
+3 ConvergenceofEmpiricalMeasuresinVariousIPMs
+Inthissection,weconsidertheapproximationofagiventargetmeasureπbyempiricalmeasures.
+Morespecifically,let{X }n beani.i.d. sequenceofrandomsamplesfromthedistributionπand
+i i=1
+letP = 1 (cid:80)n δ betheempiricalmeasureassociatedtothesamples{X }n . Ourgoalisto
+n n i=1 Xi i i=1
+derivequantitativeerrorestimatesofd (P ,π)withrespecttothreeIPMsd describedinthe
+FD n FD
+lastsection.
+WefirststateanupperboundonW (P ,π)intheaveragesenseinthenextproposition.
+1 n
+Proposition 3.1 (Convergence in 1-Wasserstein distance). Consider the IPM with F = {f :
+D
+Rd→R : Lip(f) ≤ 1}. Assumethatπ satisfiesthatM = E |X|3 < ∞. Thenthereexistsa
+3 X∼π
+constantC dependingonM suchthat
+3
+ n−1/2, d=1,
+
+EW (P ,π)≤C· n−1/2logn, d=2,
+1 n
+n−1/d, d≥3.
+The convergence rates of W (P ,π) as stated in Proposition 3.1 are well-known in the statistics
+1 n
+literature. The statement in Proposition 3.1 is a combination of results from [9] and [31]; see
+AppendixAforashortproof. WeremarkthattheprefactorconstantC intheestimateabovecan
+be made explicit. In fact, one can easily obtain from the moment bound in Proposition C.1 of
+AppendixCthatifπissub-Gaussianwithparametersmandυ,thentheconstantC canbechosenas
+√
+C =C(cid:48) d,withsomeconstantC(cid:48)dependingonlyonυand(cid:107)m(cid:107) . Moreover,onecanalsoobtaina
+∞
+highprobabilityboundforW (P ,π)ifπissub-exponential(seee.g.,[31,Corollary5.2]). Herewe
+1 n
+contentourselveswiththeexpectationresultasitcomeswithweakerassumptionsandalsosuffices
+forourpurposeofshowingtheexistenceofanempiricalmeasurewithdesiredapproximationrate.
+Moving on to approximation in MMD, the following proposition gives a high-probability non-
+asymptoticerrorboundofMMD(P ,π).
+n
+Proposition3.2(ConvergenceinMMD). ConsidertheIPMwithF = {f ∈ H : (cid:107)f(cid:107) ≤ 1}.
+D k Hk
+Assume that the kernel k satisfies Assumption K2 with constant K . Then for every τ > 0, with
+0
+probabilityatleast1−2e−τ,
+(cid:115)√ (cid:115) √
+K 2 K τ
+MMD(P ,π)≤2 0 +3 0 .
+n n n
+6
+
+---
+
+[Source 2: A Universal Approximation Theorem of Deep Neural-Networks for Expressing Probability Distributions.pdf, page 4]
+2.1 Mainresult
+Throughoutthepaper,weconsiderthefollowingassumptionsonthereproducingkernelk:
+AssumptionK1. Thekernelkisintegrallystrictlypositivedefinite: forallfinitenon-zerosigned
+BorelmeasuresµdefinedonRd,
+(cid:90)(cid:90)
+k(x,y)dµ(x)dµ(y)>0.
+Rd
+AssumptionK2. ThereexistsaconstantK >0suchthat
+0
+sup |k(x,x)|≤K . (2.4)
+0
+x∈Rd
+Assumption K3. The kernel function k : Rd ×Rd→R is twice differentiable and there exists a
+constantK >0suchthat
+1
+max sup(cid:107)∇m∇nk(x,y)(cid:107)≤K and sup|Tr(∇ ∇ k(x,y))|≤K (1+d). (2.5)
+x y 1 x y 1
+m+n≤1 x,y x,y
+Accordingto[51,Theorem7],AssumptionK1isnecessaryandsufficientforthekernelbeingchar-
+acteristic,i.e.,MMD(µ,ν)=0impliesµ=ν,whichguaranteesthatMMDisametric. Inaddition,
+thanks to [37, Proposition 3.3], KSD is a valid discrepancy measure under the Assumption K1,
+namelyKSD(p,π)≥0andKSD(p,π)=0ifandonlyifp=π.
+AssumptionK2willbeusedtogetanerrorboundforMMD(P ,π);seeTheorem3.2. Assumption
+n
+K3 will be crucial for bounding KSD(P ,π); see Theorem 3.3. Many commonly used kernel
+n
+functions fulfill all three assumptions K1-K3, including for example Gaussian kernel k(x,y) =
+e−1 2|x−y|2 andinversemultiquadric(IMQ)kernelk(x,y)=(c+|x−y|2)β withc>0andβ <0.
+Unfortunately,Matérnkernels[43]onlysatisfyAssumptionsK1-K2,butnotAssumptionK3since
+thesecondorderderivativesofkaresingularonthediagonal,sothelastestimateof(2.5)isviolated.
+InordertoboundKSD(P ,π), weneedtoassumefurtherthatthetargetmeasureπ satisfiesthe
+n
+following regularity and integrability assumptions. We will use the shorthand notation s (x) =
+π
+∇logπ(x).
+4
+
+---
+
+[Source 3: A Universal Approximation Theorem of Deep Neural-Networks for Expressing Probability Distributions.pdf, page 4]
+TheWasserstein-GANproposedby[1]leveragestheWassersteindistanceastheobjectivefunction
+toimprovethestabilityoftrainingoftheoriginalGANbasedontheJensen-Shannondivergence.
+Nevertheless,ithasbeenshownthatWasserstein-GANstillsuffersfromthemodecollapseissue[22]
+anddoesnotgeneralizewithanypolynomialnumberoftrainingsamples[2].
+MaximumMeanDiscrepancy(MMD):WhenF istheunitballofareproducingkernelHilbert
+D
+space(RKHS)H ,i.e. F :={f ∈H :(cid:107)f(cid:107) ≤1},theresultingIPMd coincideswiththe
+k D k Hk FD
+maximummeandiscrepancy(MMD)[20]:
+(cid:12) (cid:12)
+MMD(p,π)= sup (cid:12)E f(X)−E f(X)(cid:12).
+(cid:12) X∼p X∼π (cid:12)
+(cid:107)f(cid:107)Hk≤1
+GANsbasedonminimizingMMDasthelossfunctionwerefirstlyproposedin[15,33]. SinceMMD
+isaweakermetricthan1-Wassersteindistance,MMD-GANsalsosufferfromthemodecollapse
+issue,butempiricalresults(seee.g. [8])suggestthattheyrequiresmallerdiscriminativenetworks
+andhenceenablefastertrainingthanWasserstein-GANs.
+Kernelized Stein Discrepancy (KSD): If the witness class F is chosen as F := {T f : f ∈
+D D π
+H and(cid:107)f(cid:107) ≤1},whereT istheStein-operatordefinedby
+k Hk π
+T f :=∇logπ·f +∇·f, (2.3)
+π
+theassociatedIPMd becomestheKernelizedSteinDiscrepancy(KSD)[37,11]:
+FD
+KSD(p,π)= sup E [T f(X)].
+X∼p π
+(cid:107)f(cid:107)Hk≤1
+TheKSDhasreceivedgreatpopularityinmachinelearningandstatisticssincethequantityKSD(p,π)
+isveryeasytocomputeanddoesnotdependonthenormalizationconstantofπ,whichmakesit
+suitableforstatisticalcomputation,suchashypothesistesting[19]andstatisticalsampling[38,10].
+Therecentpaper[25]adoptstheGANformulation(2.1)withKSDasthetraininglosstoconstructa
+newsamplingalgorithmcalledSteinNeuralSampler.
+
+---
+
+[Source 4: Google's Neural Machine Translation System - Bridging the Gap between Human and Machine Translation - 2016 (1609.08144v1).pdf, page 9]
+combination of ML (equation 7) and RL (equation 8) objectives as follows:
+O (θ)=α∗O (θ)+O (θ) (9)
+Mixed ML RL
+α in our implementation is typically set to be 0.25.
+Inoursetup, wefirsttrainamodelusingthemaximumlikelihoodobjective(equation7)untilconvergence.
+We then refine this model using a mixed maximum likelihood and expected reward objective (equation 9),
+until BLEU score on a development set is no longer improving. The second step is optional.
+
+---
+
+[Source 5: A Novel Hybrid Quicksort Algorithm Vectorized using AVX-512 on Intel Skylake (1704.08579).pdf, page 8]
+| {
+m512i idxNoNeigh = mm512 set epi64(6, 7, 4, 5, 2, 3, 0, 1);
+m512d permNeigh = mm512 permutexvar pd(idxNoNeigh, input); |
+| --- |
+| m512d permNeighMin = mm512minpd(permNeigh, input);
+m512d permNeighMax = mm512maxpd(permNeigh, input); |
+| input = mm512maskmovpd(permNeighMin, 0xAA, permNeighMax); |
+| }
+{
+m512i idxNoNeigh = mm512 set epi64(4, 5, 6, 7, 0, 1, 2, 3); |
+| m512d permNeigh = mm512 permutexvar pd(idxNoNeigh, input);
+m512d permNeighMin = mm512minpd(permNeigh, input);
+m512d permNeighMax = mm512maxpd(permNeigh, input); |
+| input = mm512maskmovpd(permNeighMin, 0xCC, permNeighMax);
+}
+{ |
+| m512i idxNoNeigh = mm512 set epi64(6, 7, 4, 5, 2, 3, 0, 1);
+m512d permNeigh = mm512 permutexvar pd(idxNoNeigh, input); |
+| m512d permNeighMin = mm512minpd(permNeigh, input); |
+| m512d permNeighMax = mm512maxpd(permNeigh, input);
+input = mm512maskmovpd(permNeighMin, 0xAA, permNeighMax);
+} |
+| {
+m512i idxNoNeigh = mm512 set epi64(0, 1, 2, 3, 4, 5, 6, 7);
+m512d permNeigh = mm512 permutexvar pd(idxNoNeigh, input); |
+| m512d permNeighMin = mm512minpd(permNeigh, input);
+m512d permNeighMax = mm512maxpd(permNeigh, input);
+input = mm512maskmovpd(permNeighMin, 0xF0, permNeighMax); |
+| }
+{ |
+| m512i idxNoNeigh = mm512 set epi64(5, 4, 7, 6, 1, 0, 3, 2);
+m512d permNeigh = mm512 permutexvar pd(idxNoNeigh, input); |
+| m512d permNeighMin = mm512minpd(permNeigh, input); |
+| m512d permNeighMax = mm512maxpd(permNeigh, input); |
+| input = mm512maskmovpd(permNeighMin, 0xCC, permNeighMax); |
+| } |
+| { |
+| m512i idxNoNeigh = mm512 set epi64(6, 7, 4, 5, 2, 3, 0, 1); |
+| m512d permNeigh = mm512 permutexvar pd(idxNoNeigh, input); |
+| m512d permNeighMin = mm512minpd(permNeigh, input); |
+| m512d permNeighMax = mm512maxpd(permNeigh, input); |
+| input = mm512maskmovpd(permNeighMin, 0xAA, permNeighMax); |
+| } |
+|  |
+| return input; |
+| } |
+|  |
+|  |
+
+---
+
+Question: what is Maximum Mean Discrepancy (MMD)?
+
+Maximum Mean Discrepancy (MMD) is an Integral Probability Metric (IPM) defined as follows [Source 3]:
+
+When the function class F_D is the unit ball of a reproducing kernel Hilbert space (RKHS) H_k, i.e., F_D := {f ∈ H_k : ||f||_{H_k} ≤ 1}, the resulting IPM_D coincides with the maximum mean discrepancy:
+
+MMD(p,π) = sup || E_{X∼p} f(X) - E_{X∼π} f(X) ||
+          ||f||_{H_k} ≤ 1
+
+MMD is used in GANs as a loss function [Source 3]. It is considered a weaker metric than 1-Wasserstein distance, and while MMD-based GANs still suffer from mode collapse issues, empirical results suggest they require smaller discriminative networks and enable faster training than Wasserstein-GANs [Source 3].
+
+For theoretical guarantees, MMD requires certain kernel assumptions. Specifically, Assumption K2 (which states there exists a constant K_0 such that sup |k(x,x)| ≤ K_0) is used to derive error bounds for MMD(P_n, π) [Source 2]. Proposition 3.2 provides a high-probability non-asymptotic error bound for MMD, showing that for every τ > 0, with probability at least 1-2e^{-τ}:
+
+MMD(P_n,π) ≤ 2√(2K_0/n) + 3√(K_0τ/n) [Source 1]
+
+Many commonly used kernel functions satisfy the necessary assumptions for MMD, including the Gaussian kernel and inverse multiquadric (IMQ) kernel [Source 2].
+
+Sources:
+  - A Universal Approximation Theorem of Deep Neural-Networks for Expressing Probability Distributions.pdf (page/section 6, dept: software)
+  - A Universal Approximation Theorem of Deep Neural-Networks for Expressing Probability Distributions.pdf (page/section 4, dept: software)
+  - A Universal Approximation Theorem of Deep Neural-Networks for Expressing Probability Distributions.pdf (page/section 4, dept: software)
+  - Google's Neural Machine Translation System - Bridging the Gap between Human and Machine Translation - 2016 (1609.08144v1).pdf (page/section 9, dept: software)
+
+[tokens: 3907]
