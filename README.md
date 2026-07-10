@@ -1,5 +1,5 @@
 # RAG Prototype — See Retrieval-Augmented Generation Work, Not Just the Answer
-![RAG Prototype UI](docs/headline image.png)
+![RAG Prototype UI](docs/headlineimage.png)
 
 A Retrieval-Augmented Generation system for company documents (PDF, DOCX), built with a console-style UI that shows *how* it arrived at an answer — the pipeline stages it ran, which sources it retrieved, how confident the match was, and the exact chunk vs. full-context text the LLM actually saw. Built as a learning-oriented reference implementation, not just a working demo.
 
