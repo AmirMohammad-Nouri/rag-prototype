@@ -1,0 +1,927 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Document Intelligence Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #12151A;
+    --bg-raised: #1A1E25;
+    --bg-inset: #0D0F13;
+    --border: #262B34;
+    --border-bright: #3A4150;
+    --text: #E7E9ED;
+    --text-muted: #8B92A0;
+    --text-faint: #565D6B;
+    --accent: #4FD1C5;
+    --accent-dim: #2B7A72;
+    --warn: #F0A868;
+    --warn-dim: #6B4E2E;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+  }
+
+  ::selection { background: var(--accent-dim); color: #fff; }
+
+  .app {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: 100vh;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    background: var(--bg-inset);
+    border-right: 1px solid var(--border);
+    padding: 24px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand-mark {
+    width: 22px; height: 22px;
+    border-radius: 5px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+    flex-shrink: 0;
+  }
+  .brand-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14.5px;
+    letter-spacing: 0.01em;
+  }
+  .brand-sub {
+    font-size: 11px;
+    color: var(--text-faint);
+    font-family: var(--font-mono);
+    margin-top: 1px;
+  }
+
+  .side-section-label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--text-faint);
+    margin-bottom: 10px;
+  }
+
+  .dept-select {
+    width: 100%;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    padding: 9px 10px;
+    border-radius: 6px;
+    outline: none;
+  }
+  .dept-select:focus { border-color: var(--accent); }
+
+  .dept-hint {
+    font-size: 11px;
+    color: var(--text-faint);
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow-y: auto;
+    flex: 1;
+  }
+  .history-item {
+    text-align: left;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    padding: 8px 9px;
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .history-item:hover { background: var(--bg-raised); color: var(--text); }
+  .history-empty { color: var(--text-faint); font-size: 12px; padding: 8px 2px; }
+
+  .sidebar-footer {
+    font-size: 10.5px;
+    color: var(--text-faint);
+    font-family: var(--font-mono);
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+  }
+
+  /* ---------- Main ---------- */
+  .main {
+    padding: 28px 40px 60px;
+    max-width: 980px;
+    width: 100%;
+  }
+
+  .query-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .query-input {
+    flex: 1;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14.5px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    outline: none;
+  }
+  .query-input:focus { border-color: var(--accent); }
+  .query-input::placeholder { color: var(--text-faint); }
+
+  .ask-btn {
+    background: var(--accent);
+    color: #0A0D10;
+    border: none;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 13.5px;
+    padding: 0 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .ask-btn:hover { opacity: 0.88; }
+  .ask-btn:disabled { opacity: 0.4; cursor: default; }
+
+  .examples-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 12px 0 30px;
+  }
+  .example-chip {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-faint);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 100px;
+    cursor: pointer;
+  }
+  .example-chip:hover { border-color: var(--border-bright); color: var(--text-muted); }
+
+  /* ---------- Pipeline trace (signature element) ---------- */
+  .trace {
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px 16px;
+    margin-bottom: 26px;
+    display: none;
+  }
+  .trace.visible { display: block; }
+  .trace-label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--text-faint);
+    margin-bottom: 16px;
+  }
+  .trace-path {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  .trace-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+  }
+  .trace-dot {
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    background: var(--bg-raised);
+    border: 2px solid var(--border-bright);
+    transition: all 0.3s;
+  }
+  .trace-dot.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(79, 209, 197, 0.15);
+  }
+  .trace-name {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--text-muted);
+    text-transform: lowercase;
+  }
+  .trace-time {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .trace-time.visible { opacity: 1; }
+  .trace-line {
+    position: absolute;
+    top: 5px;
+    left: 5%;
+    right: 5%;
+    height: 2px;
+    background: var(--border);
+    z-index: 1;
+  }
+  .trace-line-fill {
+    position: absolute;
+    top: 5px;
+    left: 5%;
+    height: 2px;
+    background: var(--accent);
+    z-index: 1;
+    width: 0%;
+    transition: width 0.6s ease;
+  }
+
+  /* ---------- Answer ---------- */
+  .answer-card {
+    display: none;
+  }
+  .answer-card.visible { display: block; }
+
+  .confidence-flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--warn);
+    background: rgba(240, 168, 104, 0.08);
+    border: 1px solid var(--warn-dim);
+    padding: 5px 10px;
+    border-radius: 6px;
+    margin-bottom: 14px;
+  }
+
+  .answer-text {
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 6px;
+    min-height: 1.7em;
+  }
+  .type-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 15px;
+    background: var(--accent);
+    margin-left: 2px;
+    vertical-align: middle;
+    animation: blink 0.9s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .fade-in.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .meta-row {
+    display: flex;
+    gap: 16px;
+    margin: 14px 0 30px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+  }
+
+  /* ---------- Sources ---------- */
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .chart-wrap {
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px 14px;
+    margin-bottom: 20px;
+  }
+  .bars-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+    height: 150px;
+  }
+  .bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    min-width: 0;
+  }
+  .bar-value {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .bar {
+    width: 56%;
+    min-width: 18px;
+    border-radius: 4px 4px 0 0;
+    background: var(--accent);
+    transition: height 0.5s ease;
+  }
+  .bar.low { background: var(--warn); }
+  .bar-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    margin-top: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  .error-banner {
+    background: rgba(240, 168, 104, 0.08);
+    border: 1px solid var(--warn-dim);
+    color: var(--warn);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 18px;
+    display: none;
+  }
+  .error-banner.visible { display: block; }
+
+  .source-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .source-card.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .source-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+  }
+  .source-title {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .source-loc {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+  }
+  .dept-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: rgba(79, 209, 197, 0.1);
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .relevance-badge {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .source-toggle {
+    display: flex;
+    gap: 6px;
+    margin-top: 14px;
+  }
+  .toggle-btn {
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    color: var(--text-faint);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .toggle-btn.active {
+    color: var(--accent);
+    border-color: var(--accent-dim);
+    background: rgba(79, 209, 197, 0.06);
+  }
+  .chunk-text {
+    margin-top: 10px;
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--text-muted);
+    background: var(--bg-inset);
+    border-left: 2px solid var(--border-bright);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    white-space: pre-wrap;
+  }
+  .chunk-text.child-highlight { border-left-color: var(--accent); }
+
+  /* ---------- Empty / no-answer state ---------- */
+  .empty-state {
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text-faint);
+    font-size: 13px;
+  }
+
+  /* ---------- Debug panel ---------- */
+  .debug-toggle {
+    margin-top: 30px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  .debug-toggle:hover { color: var(--text-muted); }
+  .debug-panel {
+    display: none;
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-top: 10px;
+    padding: 14px 16px;
+    max-height: 320px;
+    overflow: auto;
+  }
+  .debug-panel.visible { display: block; }
+  .debug-panel pre {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin: 0;
+    white-space: pre-wrap;
+  }
+
+  .loading-row {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-faint);
+    margin: 4px 0 20px;
+  }
+  .loading-row.visible { display: flex; }
+  .spinner {
+    width: 12px; height: 12px;
+    border: 2px solid var(--border-bright);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 780px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .main { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <div>
+        <div class="brand-name">Document Console</div>
+        <div class="brand-sub">rag-prototype v0.1</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="side-section-label">Access scope</div>
+      <select id="deptSelect" class="dept-select">
+        <option value="">All departments</option>
+      </select>
+      <div class="dept-hint">Filters retrieval to documents tagged for the selected department — simulates role-based access.</div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; flex:1; min-height:0;">
+      <div class="side-section-label">History</div>
+      <div class="history-list" id="historyList">
+        <div class="history-empty">No queries yet</div>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">connected: <span id="connStatus" style="color:var(--warn)">checking…</span></div>
+  </aside>
+
+  <main class="main">
+    <div class="query-row">
+      <input id="queryInput" class="query-input" type="text" placeholder="Ask a question about the ingested documents…" />
+      <button id="askBtn" class="ask-btn">Ask</button>
+    </div>
+    <div class="examples-row" id="examplesRow"></div>
+
+    <div class="loading-row" id="loadingRow"><div class="spinner"></div><span>running pipeline…</span></div>
+    <div class="error-banner" id="errorBanner"></div>
+
+    <div class="trace" id="trace">
+      <div class="trace-label">Pipeline trace</div>
+      <div class="trace-path" id="tracePath"></div>
+    </div>
+
+    <div class="answer-card" id="answerCard">
+      <div id="confidenceFlag"></div>
+      <div class="answer-text" id="answerText"></div>
+      <div class="meta-row" id="metaRow"></div>
+
+      <div id="sourcesSection">
+        <div class="section-title">Retrieved sources</div>
+        <div class="chart-wrap"><div class="bars-chart" id="relevanceChart"></div></div>
+        <div id="sourceCards"></div>
+      </div>
+
+      <button class="debug-toggle" id="debugToggle">▸ show raw response (debug)</button>
+      <div class="debug-panel" id="debugPanel"><pre id="debugContent"></pre></div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+const API_BASE = "http://localhost:8000";
+let chartInstance = null;
+let history = [];
+
+const EXAMPLES = [
+  "What is the maximum daily meal allowance?",
+  "What are the password requirements?",
+  "Who approves expenses over $500?",
+];
+
+const STAGE_LABELS = {
+  embed: "embed query",
+  search: "vector search",
+  resolve_parents: "resolve parents",
+  generate: "generate",
+};
+
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+
+async function init() {
+  EXAMPLES.forEach(q => {
+    const chip = el("button", "example-chip", q);
+    chip.onclick = () => { document.getElementById("queryInput").value = q; runQuery(q); };
+    document.getElementById("examplesRow").appendChild(chip);
+  });
+
+  try {
+    const res = await fetch(`${API_BASE}/health`);
+    if (res.ok) {
+      document.getElementById("connStatus").textContent = "live";
+      document.getElementById("connStatus").style.color = "var(--accent)";
+    }
+  } catch {
+    document.getElementById("connStatus").textContent = "offline (mock data)";
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/departments`);
+    const data = await res.json();
+    const select = document.getElementById("deptSelect");
+    (data.departments || []).forEach(d => {
+      const opt = el("option", null, d);
+      opt.value = d;
+      select.appendChild(opt);
+    });
+  } catch { /* backend offline, selector just stays default */ }
+
+  document.getElementById("askBtn").onclick = () => runQuery(document.getElementById("queryInput").value);
+  document.getElementById("queryInput").addEventListener("keydown", e => {
+    if (e.key === "Enter") runQuery(document.getElementById("queryInput").value);
+  });
+  document.getElementById("debugToggle").onclick = () => {
+    const panel = document.getElementById("debugPanel");
+    const btn = document.getElementById("debugToggle");
+    panel.classList.toggle("visible");
+    btn.textContent = panel.classList.contains("visible") ? "▾ hide raw response (debug)" : "▸ show raw response (debug)";
+  };
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function typeAnswer(text) {
+  const answerEl = document.getElementById("answerText");
+  answerEl.textContent = "";
+  const cursor = el("span", "type-cursor");
+  answerEl.appendChild(cursor);
+
+  const words = text.split(" ");
+  for (let i = 0; i < words.length; i++) {
+    cursor.insertAdjacentText("beforebegin", (i > 0 ? " " : "") + words[i]);
+    // Slight randomness makes it read as "generating" rather than a fixed animation.
+    await sleep(14 + Math.random() * 20);
+  }
+  cursor.remove();
+}
+
+function renderTrace(stages) {
+  const trace = document.getElementById("trace");
+  const path = document.getElementById("tracePath");
+  path.innerHTML = "";
+  trace.classList.add("visible");
+
+  const line = el("div", "trace-line");
+  const fill = el("div", "trace-line-fill");
+  path.appendChild(line);
+  path.appendChild(fill);
+
+  stages.forEach(s => {
+    const node = el("div", "trace-node");
+    const dot = el("div", "trace-dot");
+    const name = el("div", "trace-name", STAGE_LABELS[s.name] || s.name);
+    const time = el("div", "trace-time", `${s.duration_ms}ms`);
+    node.appendChild(dot);
+    node.appendChild(name);
+    node.appendChild(time);
+    path.appendChild(node);
+  });
+
+  // animate: light up nodes sequentially
+  const dots = path.querySelectorAll(".trace-dot");
+  const times = path.querySelectorAll(".trace-time");
+  dots.forEach((d, i) => {
+    setTimeout(() => {
+      d.classList.add("active");
+      times[i].classList.add("visible");
+      fill.style.width = `${((i + 1) / dots.length) * 90}%`;
+    }, i * 220);
+  });
+}
+
+function renderChart(sources) {
+  // Hand-built bar chart, no external charting library — keeps this UI
+  // dependency-free so it can't silently fail if a CDN is blocked
+  // (which is exactly what caused the "only trace, nothing else" bug).
+  const container = document.getElementById("relevanceChart");
+  container.innerHTML = "";
+
+  sources.forEach((s, i) => {
+    const pct = Math.round(s.relevance * 100);
+    const col = el("div", "bar-col");
+    const value = el("div", "bar-value", `${pct}%`);
+    const bar = el("div", "bar" + (s.relevance < 0.35 ? " low" : ""));
+    bar.style.height = "0%";
+    bar.title = `${pct}% relevance — ${s.source_filename}`;
+    const label = el("div", "bar-label", `S${i + 1}`);
+    col.appendChild(value);
+    col.appendChild(bar);
+    col.appendChild(label);
+    container.appendChild(col);
+    setTimeout(() => { bar.style.height = `${Math.max(pct, 3)}%`; }, i * 150);
+  });
+}
+
+function renderSources(sources) {
+  const container = document.getElementById("sourceCards");
+  container.innerHTML = "";
+
+  if (sources.length === 0) {
+    container.appendChild(el("div", "empty-state", "No sources cleared retrieval for this query and access scope."));
+    return;
+  }
+
+  sources.forEach((s, i) => {
+    const card = el("div", "source-card");
+
+    const head = el("div", "source-head");
+    const left = el("div");
+    left.appendChild(el("div", "source-title", `S${i + 1} · ${s.source_filename}`));
+    const loc = el("div", "source-loc");
+    loc.innerHTML = `location: ${s.location ?? "—"} &nbsp;·&nbsp; `;
+    const tag = el("span", "dept-tag", s.department || "unscoped");
+    loc.appendChild(tag);
+    left.appendChild(loc);
+    head.appendChild(left);
+    head.appendChild(el("div", "relevance-badge", `${Math.round(s.relevance * 100)}%`));
+    card.appendChild(head);
+
+    const toggleRow = el("div", "source-toggle");
+    const childBtn = el("button", "toggle-btn active", "matched chunk");
+    const parentBtn = el("button", "toggle-btn", "full parent context");
+    toggleRow.appendChild(childBtn);
+    toggleRow.appendChild(parentBtn);
+    card.appendChild(toggleRow);
+
+    const textBox = el("div", "chunk-text child-highlight", s.child_text);
+    card.appendChild(textBox);
+
+    childBtn.onclick = () => {
+      childBtn.classList.add("active"); parentBtn.classList.remove("active");
+      textBox.textContent = s.child_text;
+      textBox.classList.add("child-highlight");
+    };
+    parentBtn.onclick = () => {
+      parentBtn.classList.add("active"); childBtn.classList.remove("active");
+      textBox.textContent = s.parent_text;
+      textBox.classList.remove("child-highlight");
+    };
+
+    container.appendChild(card);
+    setTimeout(() => card.classList.add("revealed"), i * 150);
+  });
+}
+
+function addToHistory(question) {
+  history.unshift(question);
+  history = history.slice(0, 12);
+  const list = document.getElementById("historyList");
+  list.innerHTML = "";
+  history.forEach(q => {
+    const item = el("button", "history-item", q);
+    item.onclick = () => { document.getElementById("queryInput").value = q; runQuery(q); };
+    list.appendChild(item);
+  });
+}
+
+function mockResponse(question) {
+  // Used when the backend isn't running, so the UI is still explorable standalone.
+  return {
+    answer: "[mock] The maximum daily meal allowance is $75 for domestic travel and $100 for international travel.",
+    low_confidence: false,
+    usage: { total_tokens: 412 },
+    stages: [
+      { name: "embed", duration_ms: 84.2 },
+      { name: "search", duration_ms: 12.6 },
+      { name: "resolve_parents", duration_ms: 1.1 },
+      { name: "generate", duration_ms: 690.4 },
+    ],
+    sources: [
+      { source_filename: "expense_policy.docx", location: 2, department: "finance", relevance: 0.87,
+        child_text: "The maximum daily meal allowance is $75 for domestic travel and $100 for international travel.",
+        parent_text: "Section 1: Travel Expenses\nEmployees traveling for business purposes may claim reimbursement for flights, hotels, and meals.\nThe maximum daily meal allowance is $75 for domestic travel and $100 for international travel.\nAll receipts must be submitted within 30 days of the expense date." },
+      { source_filename: "expense_policy.docx", location: 3, department: "finance", relevance: 0.41,
+        child_text: "Expenses over $500 require manager approval before submission.",
+        parent_text: "Section 2: Approval Process\nExpenses over $500 require manager approval before submission.\nThe finance department, headed by Sarah Chen, reviews all claims within 5 business days." },
+    ],
+  };
+}
+
+async function runQuery(question) {
+  question = (question || "").trim();
+  if (!question) return;
+
+  document.getElementById("askBtn").disabled = true;
+  document.getElementById("loadingRow").classList.add("visible");
+  document.getElementById("answerCard").classList.remove("visible");
+
+  const department = document.getElementById("deptSelect").value || null;
+  let data;
+  try {
+    const res = await fetch(`${API_BASE}/ask`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question, department }),
+    });
+    if (!res.ok) throw new Error("bad response");
+    data = await res.json();
+  } catch {
+    await new Promise(r => setTimeout(r, 600));
+    data = mockResponse(question);
+  }
+
+  document.getElementById("loadingRow").classList.remove("visible");
+  addToHistory(question);
+
+  const errorBanner = document.getElementById("errorBanner");
+  errorBanner.classList.remove("visible");
+
+  try {
+    const stages = data.stages || [];
+    document.getElementById("answerCard").classList.add("visible");
+    document.getElementById("confidenceFlag").innerHTML = "";
+    document.getElementById("metaRow").innerHTML = "";
+    document.getElementById("metaRow").classList.remove("revealed");
+    document.getElementById("relevanceChart").innerHTML = "";
+    document.getElementById("sourceCards").innerHTML = "";
+    document.getElementById("answerText").textContent = "";
+
+    // 1. Let the pipeline trace play out first — it's showing what
+    //    actually happened, so the answer shouldn't appear before it does.
+    renderTrace(stages);
+    const traceDuration = stages.length * 220 + 400;
+    await sleep(traceDuration);
+
+    // 2. Stream the answer in word by word, like watching it get generated.
+    await typeAnswer(data.answer || "(no answer text returned)");
+
+    // 3. Reveal confidence flag + token/source metadata once the answer lands.
+    const flagEl = document.getElementById("confidenceFlag");
+    if (data.low_confidence) {
+      flagEl.appendChild(el("div", "confidence-flag", "⚠ Low confidence — best available match may not fully answer this"));
+    }
+    const sources = data.sources || [];
+    const meta = document.getElementById("metaRow");
+    meta.classList.add("fade-in");
+    if (data.usage) meta.appendChild(el("span", null, `tokens: ${data.usage.total_tokens}`));
+    meta.appendChild(el("span", null, `sources: ${sources.length}`));
+    if (department) meta.appendChild(el("span", null, `scope: ${department}`));
+    requestAnimationFrame(() => meta.classList.add("revealed"));
+
+    await sleep(250);
+
+    // 4. Reveal sources + relevance chart last, staggered card by card —
+    //    this is the "here's the evidence" moment, so it comes after the answer.
+    if (sources.length) renderChart(sources);
+    renderSources(sources);
+
+    document.getElementById("debugContent").textContent = JSON.stringify(data, null, 2);
+  } catch (err) {
+    console.error("Render error:", err);
+    errorBanner.textContent = "UI render error: " + err.message + " (see browser console). Raw response is in the debug panel below.";
+    errorBanner.classList.add("visible");
+    document.getElementById("debugContent").textContent = JSON.stringify(data, null, 2);
+    document.getElementById("answerCard").classList.add("visible");
+  } finally {
+    document.getElementById("askBtn").disabled = false;
+  }
+}
+
+init();
+</script>
+</body>
+</html>
